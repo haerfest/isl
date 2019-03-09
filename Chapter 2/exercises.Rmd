@@ -1,0 +1,102 @@
+---
+title: "Chapter 2 Exercises"
+output: html_notebook
+---
+
+### Exercise 1
+
+. | Flexible is | Justification
+--|-------------|---------------
+a | Better      | Extremely large sample set prevents overfitting the few predictors.
+b | Worse       | Samples too few to reliably estimate relationships of many predictors. High risk of overfitting.
+c | Better      | Non-linear relationship is hard to estimate with inflexible model.
+d | Worse       | Lot of noise in the samples, do not want a flexible model to follow that.
+
+### Exercise 2
+
+. | Type           | Interest   | n   | p
+--|----------------|------------|-----|---
+a | Regression     | Inference  | 500 | 3
+b | Classification | Prediction | 20  | 13
+c | Regression     | Prediction | 52  | 3
+
+### Exercise 3
+
+```{r echo=FALSE}
+x = 0:9
+n = length(x)
+y = seq(0, 15, length=n)
+
+# irreducible error is a constant
+bayes = rep(3.0, n)
+
+# bias reduces as flexibility increases
+bias = c(10, 5, 3, 1, 0.5, 0.25, 0.12, 0.06, 0.03, 0.015)
+
+# variance increases with flexibility 
+variance = rev(bias)
+
+# test error follows bias and variance, stays above irreducible error
+test = bayes + bias + variance
+
+# train error will show overfitting as flexibility increases
+train = append(test[1:4] - rep(0.5, 4), c(2, 1, 0.5, 0, 0, 0))
+
+# plot them all together
+plot(x, y, type="n", main="Errors", xaxt="n", yaxt="n", xlab="flexibility", ylab="error")
+lines(x, bayes, col="black", lty=3)
+lines(x, bias, col="green")
+lines(x, variance, col="blue")
+lines(x, test, col="red")
+lines(x, train, col="gray")
+
+# add legend
+legend(x=mean(x), y=max(y), legend=c("Bayes", "Bias", "Variance", "Test", "Train"),
+       col=c("black", "green", "blue", "red", "gray"), lty=c(3, 1, 1, 1, 1))
+```
+Curve    | Explanation
+---------|-------------
+Bayes    | Irreducible error due to predictors unaccounted for, noise. Constant regardless of model choice.
+Bias     | Inflexible model has strong bias and potentially high error if it cannot model the data well. Reduces as flexibility increases.
+Variance | Flexible model has high variance: small change in train set has strong impact on error. Reduces as flexibility reduces.
+Test     | Follows sum of irreducible error (Bayes), bias and variance. Can never drop below irreducible error.
+Train    | Initially follows same shape as test error, but an overly flexible model causes overfitting, reducing it to (close to) zero.
+
+### Exercise 4
+
+I will not.
+
+### Exercise 5
+
+Advantages:
+
+* Can model very complex relationships between predictors and responses, more so than inflexible models.
+* Does not suffer from strong bias, where it's not a good fit to the data.
+
+Disadvantages:
+
+* Hardly usable for inference, since exact relationship between predictors and responses is unclear.
+* Risks overfitting, for instance when too little data is used.
+* Suffers from strong variance when too flexible, where a small change in the training set used could yield a very different model.
+
+Preferred when:
+
+* An inflexible model is not accurate enough.
+
+Less flexible model preferred when:
+
+* Actually all the time, but it just doesn't always cut it so we have to resort to a more flexible approach.
+
+### Exercise 6
+
+* **Parametric**: you choose the model beforehand, and just need to fit its parameters.
+* **Non-parametric**: you don't choose the model, but let it (and its parameters) be the result of training.
+
+Advantages parametric approach:
+
+* Simpler, only its parameters have to be estimated.
+* Less risk of overfitting, since you typically choose a more biased model.
+
+Disadvantages:
+
+* May not give results as good as a non-parametric approach could, as that could end up with a more flexible model.
