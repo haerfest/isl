@@ -100,3 +100,56 @@ Advantages parametric approach:
 Disadvantages:
 
 * May not give results as good as a non-parametric approach could, as that could end up with a more flexible model.
+
+### Exercise 7
+
+Obs.| X1 | X2 | X3 | Y     | Dist.
+----|----|----|----|-------|-------
+1   | 0  | 3  | 0  | Red   | 3
+2   | 2  | 0  | 0  | Red   | 2
+3   | 0  | 1  | 3  | Red   | 3.2
+4   | 0  | 1  | 2  | Green | 2.2
+5   | -1 | 0  | 1  | Green | 1.4
+6   | 1  |1   | 1  | Red   | 1.7
+
+* With K = 1 the prediction is Green, since the single closest neighbor is (-1, 0, 1) which has the color Green.
+* With K = 3 the prediction is Red, since the three closest neighbors are (-1, 0, 1), (1, 1, 1), and (2, 0, 0), which have the colors Green, Red, and Red, respectively. The majority color is Red.
+* The best value for K would be small, since it looks at only a few neighbors, which makes it follow the Bayes decision boundary better than a model with a large value of K.
+
+### Exercise 8
+
+```{r}
+college = read.csv("College.csv")
+rownames(college) = college[,1]
+college = college[,-1]
+
+summary(college)
+```
+
+```{r}
+pairs(college[,1:10])
+```
+
+```{r}
+plot(x=college$Private, y=college$Outstate, xlab="Private", ylab="Outstate", main="College")
+```
+
+```{r}
+Elite = rep("No", nrow(college))
+Elite[college$Top10perc > 50] = "Yes"
+Elite = as.factor(Elite)
+college = data.frame(college, Elite)
+summary(college$Elite)
+```
+
+```{r}
+plot(x=college$Elite, y=college$Outstate, xlab="Elite", ylab="Outstate", main="College")
+```
+
+```{r}
+par(mfrow=c(2, 2))
+hist(college$Room.Board, breaks=20)
+hist(college$PhD, breaks=20)
+hist(college$perc.alumni, breaks=20)
+hist(college$Grad.Rate, breaks=20)
+```
