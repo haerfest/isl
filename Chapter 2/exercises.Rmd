@@ -193,3 +193,104 @@ Yes:
 
 * There appears to be a linear relationship between the `year` the car was built, and the `mpg` it achieves. The newer the car, the more miles per gallon it achieves.
 * There appear to be logarithmic relationships between the engine `displacement`, `horsepower`, and the car's `weight`, with respect to the `mpg`. The bigger the engine, the more horsepower it produces, or the heavier the car, the smaller the miles per gallon the car manages. Of course those predictors are related: the heavier the car, the larger the engine it will have and the more horsepower it needs to get going.
+
+### Exercise 10
+
+```{r}
+library(MASS)
+attach(Boston)
+```
+
+506 rows and 14 columns. The rows are the samples, the columns the variables / features / predictors.
+
+Especially `rm` and `lstat` seem to predict the `medv`:
+
+* The more rooms the house has, the more expensive the house is.
+* The smaller the percentage of the population that has a lower status, the more expensive the house is.
+
+```{r}
+pairs(~ medv + rm + lstat)
+```
+
+No linear relationship between `crim` and other predictors, but some interesting other relationships. For these predictors, per capita crime is generally low, except for:
+
+* low values of `zn`: crime is higher in smaller areas?
+* a particular middle value range of `indus`: crime is higher in areas that are partially residential and partially industrial, and lower in areas that are either fully residential or fully industrial.
+* low values of `chas`: crime is lower close to the river.
+* high values of `rad`: crime is lower when not close to highways.
+* high values of `tax`: crime is higher for houses that are owned by rich people.
+* high values of `ptratio`: crime is higher in areas with more pupils per teacher, or not enough teachers.
+
+```{r}
+pairs(crim ~ zn + indus + chas + rad + tax + ptratio)
+```
+
+```{r}
+summary(crim)
+```
+
+75% of the records have a crime rate per capita of 3.67 or lower (3rd quantile). A plot shows there is a clear group of suburbs that have a higher crime rate. Most suburbs have a crime rate well below 10, the major group where crime thrives still lies below 40, and the outliers go all the way up to nearly 89.
+
+```{r}
+plot(crim)
+```
+
+There is also a group of suburbs that clearly have a much higher tax rate than the rest, except a very small group that tops themm all. Taxes range from $187 per $10,000 property value, to $711 per $10,000 property value. Most are well below $500.
+
+```{r}
+plot(tax)
+```
+
+There are also clusters of suburbs that have a substantially higher pupil-to-teacher ratio. The range goes from 12.6 pupils per teacher to almost twice that at 22.0 pupils per teacher. No substantial outliers:
+
+```{r}
+plot(ptratio)
+```
+
+```{r}
+summary(as.factor(chas))
+```
+
+35 out of 506 suburbs bound the Charles river.
+
+```{r}
+median(ptratio)
+```
+
+The median pupil-to-teacher ratio is 19.05 pupils per teacher.
+
+```{r}
+Boston[medv==min(medv),]
+```
+
+There are two suburbs that qualify. Comparing predictors to what `summary` shows:
+
+* crime per capita (`crim`) is exceptionally high at 38 and nearly 68.
+* proportion of industry (`indus`) is at the third quantile level, so they are entering the top-25% of industrialized areas.
+* same thing for nitrogen oxides concentrations (`nox`), possibly due to industry?
+* they fall in the bottom-25% of having the smallest houses according to the number of rooms (`rm`).
+* the houses are by far the oldest (`age`) of all suburbs.
+* they are unusually close to employment centers (`dist`).
+* they are unusually close to radial highways (`rad`).
+* they enter the top-25% of highest tax rates (`tax`).
+* they enter the top-25% of highest pupil-to-teacher ratio (`ptratio`).
+* same story for one of the suburbs when it comes to propertion of black residents (`black`); the other suburb is close.
+* unusually high percentage of the population has a lower status.
+
+In summary: high crime rates; small, old houses; high tax rates; industrialized; polution; noway close to nature; poor education in terms of few teachers per pupil; low status residents.
+
+```{r}
+nrow(Boston[rm>7,])
+```
+
+64 suburbs average more than 7 rooms per dwelling.
+
+```{r}
+nrow(Boston[rm>8,])
+```
+
+13 suburbs average more than 8 rooms per dwelling.
+
+Crime is mostly very low; very little industry; mostly not bounding the river; polution is about average; mostly old houses, mansions maybe; distance to employment centers slightly below average; mostly at great distance from highways; tax rate average; pupil-to-teacher ratio below average, so good education; above average proportion of black residents; low proportion of low-status residents; very expensive houses.
+
+Suburbs for well-to-do people.
