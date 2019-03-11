@@ -153,3 +153,43 @@ hist(college$PhD, breaks=20)
 hist(college$perc.alumni, breaks=20)
 hist(college$Grad.Rate, breaks=20)
 ```
+
+### Exercise 9
+
+```{r}
+Auto = na.omit(read.csv("Auto.csv", na.strings="?"))
+```
+
+Predictor    | Type         | `range`     | `mean`   | `sd` 
+-------------|--------------|-------------|----------|----------
+mpg          | Quantitative | 9.0 - 46.6  | 23.44592 | 7.805007
+cylinders    | Qualitative  |             |          |
+displacement | Quantitative | 68 - 455    | 194.412  | 104.644
+horsepower   | Quantitative | 46 - 230    | 104.4694 | 38.49116
+weight       | Quantitative | 1613 - 5140 | 2977.584 | 849.4026
+acceleration | Quantitative | 8.0 - 24.8  | 15.54133 | 2.758864
+year         | Quantitative | 70 - 82     | 75.97959 | 3.683737
+origin       | Qualitative  |             |          |
+name         | Qualitative  |             |          |
+
+```{r}
+Auto = Auto[-c(10:85),]
+```
+
+Predictor    | Type         | `range`     | `mean`   | `sd` 
+-------------|--------------|-------------|----------|----------
+mpg          | Quantitative | 11.0 - 46.6 | 24.40443 | 7.867283
+displacement | Quantitative | 68 - 455    | 187.2405 | 99.67837
+horsepower   | Quantitative | 46 - 230    | 100.7215 | 35.70885
+weight       | Quantitative | 1649 - 4997 | 2935.972 | 811.3002
+acceleration | Quantitative | 8.5 - 24.8  | 15.7269  | 2.693721
+year         | Quantitative | 70 - 82     | 77.14557 | 3.106217
+
+```{r}
+pairs(~ Auto$mpg + Auto$year + Auto$displacement + Auto$horsepower + Auto$weight)
+```
+
+Yes:
+
+* There appears to be a linear relationship between the `year` the car was built, and the `mpg` it achieves. The newer the car, the more miles per gallon it achieves.
+* There appear to be logarithmic relationships between the engine `displacement`, `horsepower`, and the car's `weight`, with respect to the `mpg`. The bigger the engine, the more horsepower it produces, or the heavier the car, the smaller the miles per gallon the car manages. Of course those predictors are related: the heavier the car, the larger the engine it will have and the more horsepower it needs to get going.
